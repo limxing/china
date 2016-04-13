@@ -1,0 +1,107 @@
+<resources>
+
+    <!-- Base application theme.
+     在这里我们是NoActionBar的主题而不是系统开始给我们的Theme.AppCompat.Light.DarkActionBar-->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+
+    </style>
+    <!--这个是右滑手势退出的主题,在继右滑退出界面的主题使用这个-->
+    <style name="Theme.Swipe.Back" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+    </style>
+
+    <style name="FullscreenTheme" parent="AppTheme">
+        <item name="android:actionBarStyle">@style/FullscreenActionBarStyle</item>
+        <item name="android:windowActionBarOverlay">true</item>
+        <item name="android:windowBackground">@null</item>
+        <item name="metaButtonBarStyle">?android:attr/buttonBarStyle</item>
+        <item name="metaButtonBarButtonStyle">?android:attr/buttonBarButtonStyle</item>
+    </style>
+
+    <style name="FullscreenActionBarStyle" parent="Widget.AppCompat.ActionBar">
+        <item name="android:background">@color/black_overlay</item>
+    </style>
+
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+    <!--bottonDialog-->
+    <style name="bottomDialog" parent="android:Theme.Translucent.NoTitleBar">
+        <item name="android:windowBackground">@color/black_overlay</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowAnimationStyle">@android:style/Animation.InputMethod</item>
+    </style>
+
+<!--切换动画-->
+    <style name="myBottom" parent="android:Animation">
+        <!--<item name="@android:windowEnterAnimation">@anim/activity_totop</item>-->
+        <item name="@android:windowEnterAnimation">@anim/activity_totop</item>
+        //进入时的动画
+        <item name="@android:windowExitAnimation">@anim/activity_tobottom</item>
+        //退出时的动画
+    </style>
+
+    <style name="myBottomBac" parent="android:Animation">
+        <item name="@android:windowEnterAnimation">@anim/toast_enter</item>
+        //进入时的动画
+        <item name="@android:windowExitAnimation">@anim/toast_exit</item>
+    </style>
+
+<style name="mySelect" parent="@android:style/Animation.Dialog">
+    <item name="@android:windowEnterAnimation">@anim/activity_totop</item>
+    //进入时的动画
+    <item name="@android:windowExitAnimation">@anim/activity_tobottom</item>
+    //退出时的动画
+</style>
+<!--AweetDialog-->
+    <style name="alert_dialog" parent="android:Theme.Dialog">
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:windowIsTranslucent">false</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowFullscreen">false</item>
+        <item name="android:windowBackground">@color/float_transparent</item>
+        <item name="android:windowAnimationStyle">@null</item>
+        <item name="android:backgroundDimEnabled">true</item>
+        <item name="android:backgroundDimAmount">0.4</item>
+    </style>
+
+    <style name="dialog_blue_button" parent="android:Widget.Button">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">31dp</item>
+        <item name="android:background">@drawable/blue_button_background</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:paddingLeft">21dp</item>
+        <item name="android:paddingRight">21dp</item>
+        <item name="android:textColor">@color/button_text_color</item>
+    </style>
+
+<!--在activity的声明文件中声明这个theme的属性,就能够使这个activity上下的弹出摊入-->
+    <style name="Animation.Activity.Translucent.Style" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:windowEnterAnimation">@anim/activity_totop</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:colorBackgroundCacheHint">@null</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowExitAnimation">@anim/activity_tobottom</item>
+    </style>
+<!--SVProgressHUD-->
+    <style name="AlertActivity_AlertStyle" parent="android:Theme.Dialog">
+        <!--<item name="android:windowAnimationStyle">@style/AnimAlert</item>-->
+        <!-- 边框 -->
+        <item name="android:windowFrame">@null</item>
+        <!-- 是否浮现在activity之上 -->
+        <item name="android:windowIsFloating">true</item>
+        <!-- 半透明 -->
+        <item name="android:windowIsTranslucent">true</item>
+        <!-- 无标题 -->
+        <item name="android:windowNoTitle">true</item>
+        <!-- 背景透明 -->
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <!-- 模糊 -->
+        <item name="android:backgroundDimEnabled">true</item>
+    </style>
+
+</resources>

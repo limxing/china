@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:background="#ffffff"
+    android:layout_height="match_parent">
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@mipmap/ic_launcher"
+        android:layout_above="@+id/textView"
+        android:layout_centerHorizontal="true" />
+    <TextView
+        android:paddingTop="30dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/app_name"
+        android:paddingBottom="30dp"
+        android:layout_centerInParent="true"
+        android:textSize="20sp"
+        android:id="@+id/textView" />
+
+   <TextView
+       android:layout_width="wrap_content"
+       android:layout_height="wrap_content"
+       android:layout_centerHorizontal="true"
+       android:layout_alignParentBottom="true"
+       android:layout_marginBottom="20dp"
+       android:text="转换工具,开发:Limxing"
+      />
+
+</RelativeLayout>

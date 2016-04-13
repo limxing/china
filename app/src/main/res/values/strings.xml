@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">中华转换工具</string>
+    <string name="action_settings"> 使用说明</string>
+<string name="help">使用说明\n点击加号选择需要转换的文件,文件转换成功后会展示在主界面,转换后的文件存放在手机内存
+    中china的文件夹中,以_changed.xls结尾的文件就是成功转换的文件.</string>
+    <array name="country">
+
+    </array>
+</resources>
