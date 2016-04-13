@@ -80,6 +80,8 @@ public class Controller {
                     time = time + 86400000;
 //                    tomorrow = dateFormat.format(new Date(time));
                     tomorrow = new Date(time);
+
+                    //给表格加边框的format
                     Label label = new Label(0, 0, "");
                     CellFormat s = label.getCellFormat();
                     wcf = new WritableCellFormat(s);
