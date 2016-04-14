@@ -14,6 +14,7 @@ import java.util.Map;
 
 import jxl.Cell;
 import jxl.DateCell;
+import jxl.LabelCell;
 import jxl.Sheet;
 import jxl.Workbook;
 import jxl.format.Alignment;
@@ -41,6 +42,7 @@ public class Controller {
     private static Date today;
     private static DateCell dc;
     private static WritableCellFormat wcf;
+    private static WritableCellFormat dateWcf;
 
     public static void start(final Activity activity, final String path, final ControllerListener listener) {
         MyThreadPool.excuteCachedTask(new Runnable() {
@@ -88,6 +90,13 @@ public class Controller {
 //                    CellFormat s = label.getCellFormat();
                     wcf = new WritableCellFormat();
                     wcf.setBorder(jxl.format.Border.ALL, jxl.format.BorderLineStyle.THIN);
+
+                    //获取日期格式
+                    WritableSheet sheet2 = book2.getSheet(0);
+                    Cell cell1Sheet2=  sheet2.getCell(18,0);
+                    dateWcf = new WritableCellFormat(cell1Sheet2.getCellFormat());
+                    dateWcf.setBorder(jxl.format.Border.ALL, jxl.format.BorderLineStyle.THIN);
+
 
 
                     int guiDang = 0;
@@ -205,10 +214,9 @@ public class Controller {
                                      boolean ispaiOrGui, String guidang) throws WriteException {
         // TODO Auto-generated method stub
         WritableSheet sheet2 = book.getSheet(sheetLocation);
+
         // 工单编号
         Cell cell = sheet.getCell(0, i);
-
-
         String result = cell.getContents();
         sheet2.addCell(new Label(0, column, result, wcf));
         sheet2.addCell(new Label(17, column, result, wcf));
@@ -399,15 +407,16 @@ public class Controller {
 
 //        dateTime.setDate(tomorrow);
 
+
         if (guidang.equals("派单")) {
 //            sheet2.addCell(new Label(18, column, tomorrow,wcf));
-            sheet2.addCell(new DateTime(18,column,tomorrow,wcf));
+            sheet2.addCell(new DateTime(18,column,tomorrow,dateWcf));
 //            sheet2.addCell(dateTime.copyTo(18, column));
             //归档
             sheet2.addCell(new Label(14, column, "", wcf));
         } else {
 //            sheet2.addCell(new Label(18, column, today,wcf));
-            sheet2.addCell(new DateTime(18,column,tomorrow,wcf));
+            sheet2.addCell(new DateTime(18,column,today,dateWcf));
 //            dateTime.setDate(today);
 //            sheet2.addCell(dateTime.copyTo(18, column));
             //归档
