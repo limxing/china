@@ -35,8 +35,8 @@ public class Controller {
     static Map<String, String> rongMap;
     static Map<String, String> fangMap;
     static boolean isEmpty;
-    static Date tomorrow;
-    private static Date today;
+    static String tomorrow;
+    private static String today;
     private static DateCell dc;
     private static WritableCellFormat wcf;
 
@@ -73,13 +73,13 @@ public class Controller {
                     // System.out.println(rownum);
                     // SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd
                     // HH:mm:ss");
-//                    SimpleDateFormat dateFormat = new SimpleDateFormat("M月d日");
+                    SimpleDateFormat dateFormat = new SimpleDateFormat("M月d日");
                     long time = System.currentTimeMillis();// 当前时间
-//                    today = dateFormat.format(new Date(time));
-                    today = new Date(time);
+                    today = dateFormat.format(new Date(time));
+//                    today = new Date(time);
                     time = time + 86400000;
-//                    tomorrow = dateFormat.format(new Date(time));
-                    tomorrow = new Date(time);
+                    tomorrow = dateFormat.format(new Date(time));
+//                    tomorrow = new Date(time);
 
                     //给表格加边框的format
                     Label label = new Label(0, 0, "");
@@ -393,18 +393,19 @@ public class Controller {
         // cell = sheet.getCell(21, i);
         // result = cell.getContents();
 //记录日期
-        DateTime dateTime = new DateTime(dc);
-        dateTime.setDate(tomorrow);
+//        DateTime dateTime = new DateTime(dc);
+
+//        dateTime.setDate(tomorrow);
 
         if (guidang.equals("派单")) {
-//            sheet2.addCell(new Label(18, column, tomorrow));
-            sheet2.addCell(dateTime.copyTo(18, column));
+            sheet2.addCell(new Label(18, column, tomorrow));
+//            sheet2.addCell(dateTime.copyTo(18, column));
             //归档
             sheet2.addCell(new Label(14, column, "", wcf));
         } else {
-//            sheet2.addCell(new Label(18, column, today));
-            dateTime.setDate(today);
-            sheet2.addCell(dateTime.copyTo(18, column));
+            sheet2.addCell(new Label(18, column, today));
+//            dateTime.setDate(today);
+//            sheet2.addCell(dateTime.copyTo(18, column));
             //归档
             sheet2.addCell(new Label(14, column, guidang, wcf));
         }
