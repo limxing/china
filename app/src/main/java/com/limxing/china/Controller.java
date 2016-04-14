@@ -302,7 +302,7 @@ public class Controller {
         // result += s;
         // }
 
-        sheet2.addCell(new Label(5, column, result, wcf));
+        sheet2.addCell(new Label(5, column, checkRepestString(result), wcf));
 
         // 工单分类
         cell = sheet.getCell(3, i);
@@ -479,6 +479,29 @@ public class Controller {
         void finish();
 
         void error();
+    }
+
+    /**
+     *
+     * @param s
+     * @return
+     */
+    private static String checkRepestString(String s) {
+        int l = 2;
+        String congfu = "";
+        for (int i = 0; i < s.length() - l; i++) {
+            String ss = s.substring(i, i + l + 1);
+            String sss = s.replaceFirst(ss, "");
+            if (sss.contains(ss)) {
+                congfu = ss;
+                l++;
+                i--;
+            }
+        }
+//        System.out.println(congfu);
+        s = s.replaceFirst(congfu, "");
+//        System.out.println(s);
+        return s;
     }
 
 
