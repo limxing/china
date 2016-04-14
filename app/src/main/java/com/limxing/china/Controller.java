@@ -16,8 +16,10 @@ import jxl.Cell;
 import jxl.DateCell;
 import jxl.Sheet;
 import jxl.Workbook;
+import jxl.format.Alignment;
 import jxl.format.CellFormat;
 import jxl.read.biff.BiffException;
+import jxl.write.DateFormat;
 import jxl.write.DateTime;
 import jxl.write.Label;
 import jxl.write.Number;
@@ -35,8 +37,8 @@ public class Controller {
     static Map<String, String> rongMap;
     static Map<String, String> fangMap;
     static boolean isEmpty;
-    static String tomorrow;
-    private static String today;
+    static Date tomorrow;
+    private static Date today;
     private static DateCell dc;
     private static WritableCellFormat wcf;
 
@@ -75,16 +77,16 @@ public class Controller {
                     // HH:mm:ss");
                     SimpleDateFormat dateFormat = new SimpleDateFormat("M月d日");
                     long time = System.currentTimeMillis();// 当前时间
-                    today = dateFormat.format(new Date(time));
-//                    today = new Date(time);
+//                    today = dateFormat.format(new Date(time));
+                    today = new Date(time);
                     time = time + 86400000;
-                    tomorrow = dateFormat.format(new Date(time));
-//                    tomorrow = new Date(time);
+//                    tomorrow = dateFormat.format(new Date(time));
+                    tomorrow = new Date(time);
 
                     //给表格加边框的format
-                    Label label = new Label(0, 0, "");
-                    CellFormat s = label.getCellFormat();
-                    wcf = new WritableCellFormat(s);
+//                    Label label = new Label(0, 0, "");
+//                    CellFormat s = label.getCellFormat();
+                    wcf = new WritableCellFormat();
                     wcf.setBorder(jxl.format.Border.ALL, jxl.format.BorderLineStyle.THIN);
 
 
@@ -398,12 +400,14 @@ public class Controller {
 //        dateTime.setDate(tomorrow);
 
         if (guidang.equals("派单")) {
-            sheet2.addCell(new Label(18, column, tomorrow));
+//            sheet2.addCell(new Label(18, column, tomorrow,wcf));
+            sheet2.addCell(new DateTime(18,column,tomorrow,wcf));
 //            sheet2.addCell(dateTime.copyTo(18, column));
             //归档
             sheet2.addCell(new Label(14, column, "", wcf));
         } else {
-            sheet2.addCell(new Label(18, column, today));
+//            sheet2.addCell(new Label(18, column, today,wcf));
+            sheet2.addCell(new DateTime(18,column,tomorrow,wcf));
 //            dateTime.setDate(today);
 //            sheet2.addCell(dateTime.copyTo(18, column));
             //归档
@@ -414,6 +418,16 @@ public class Controller {
         sheet2.addCell(new Label(10, column, "", wcf));
         //是否防线
         sheet2.addCell(new Label(15, column, "", wcf));
+
+
+//
+//        DateFormat dateFormat=new DateFormat("MMM-yy");
+//        CellFormat dd=dc.getCellFormat();
+//
+//        WritableCellFormat writableCellFormat= new WritableCellFormat(dateFormat);
+
+//        jxl.write.DateTime cc=new jxl.write.DateTime(19,column,new Date());
+//        sheet2.addCell(cc);
 
     }
 
