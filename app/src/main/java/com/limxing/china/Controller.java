@@ -85,18 +85,19 @@ public class Controller {
 //                    tomorrow = dateFormat.format(new Date(time));
                     tomorrow = new Date(time);
 
-                    //给表格加边框的format
-//                    Label label = new Label(0, 0, "");
-//                    CellFormat s = label.getCellFormat();
-                    wcf = new WritableCellFormat();
-                    wcf.setBorder(jxl.format.Border.ALL, jxl.format.BorderLineStyle.THIN);
+
 
                     //获取日期格式
                     WritableSheet sheet2 = book2.getSheet(0);
-                    Cell cell1Sheet2=  sheet2.getCell(18,0);
+                    Cell cell1Sheet2 = sheet2.getCell(18, 0);
                     dateWcf = new WritableCellFormat(cell1Sheet2.getCellFormat());
                     dateWcf.setBorder(jxl.format.Border.ALL, jxl.format.BorderLineStyle.THIN);
-
+                    //给表格加边框的format
+//                    Label label = new Label(0, 0, "");
+//                    CellFormat s = label.getCellFormat();
+                    cell1Sheet2 = sheet2.getCell(0, 0);
+                    wcf = new WritableCellFormat(cell1Sheet2.getCellFormat());
+                    wcf.setBorder(jxl.format.Border.ALL, jxl.format.BorderLineStyle.THIN);
 
 
                     int guiDang = 0;
@@ -277,6 +278,9 @@ public class Controller {
         if (result.startsWith("铁通-")) {
             result = result.substring(3);
         }
+        if (result.contains("\\")) {
+            result = result.replaceAll("\\\\", "");
+        }
         // Matcher matcher = Pattern.compile("[0-9]").matcher(result);
         // if (matcher.find()) {
         // // System.out.println(matcher.start());
@@ -301,8 +305,8 @@ public class Controller {
         // for (String s : data) {
         // result += s;
         // }
-
-        sheet2.addCell(new Label(5, column, checkRepestString(result), wcf));
+        result = checkRepestString(result);
+        sheet2.addCell(new Label(5, column, result, wcf));
 
         // 工单分类
         cell = sheet.getCell(3, i);
@@ -350,6 +354,27 @@ public class Controller {
         } else {
             sheet2.addCell(new Label(13, column, "", wcf));
         }
+
+//统计日期
+        if (guidang.equals("派单")) {
+//            sheet2.addCell(new Label(18, column, tomorrow,wcf));
+            sheet2.addCell(new DateTime(18, column, tomorrow, dateWcf));
+//            sheet2.addCell(dateTime.copyTo(18, column));
+            //归档
+            sheet2.addCell(new Label(14, column, "", wcf));
+        } else {
+//            sheet2.addCell(new Label(18, column, today,wcf));
+            sheet2.addCell(new DateTime(18, column, today, dateWcf));
+//            dateTime.setDate(today);
+//            sheet2.addCell(dateTime.copyTo(18, column));
+            //归档
+            if (result.equals("OTTTV 拆机")) {
+                sheet2.addCell(new Label(14, column, "拆机", wcf));
+            } else {
+                sheet2.addCell(new Label(14, column, guidang, wcf));
+            }
+        }
+
 
         // 乡镇
         cell = sheet.getCell(6, i);
@@ -408,20 +433,6 @@ public class Controller {
 //        dateTime.setDate(tomorrow);
 
 
-        if (guidang.equals("派单")) {
-//            sheet2.addCell(new Label(18, column, tomorrow,wcf));
-            sheet2.addCell(new DateTime(18,column,tomorrow,dateWcf));
-//            sheet2.addCell(dateTime.copyTo(18, column));
-            //归档
-            sheet2.addCell(new Label(14, column, "", wcf));
-        } else {
-//            sheet2.addCell(new Label(18, column, today,wcf));
-            sheet2.addCell(new DateTime(18,column,today,dateWcf));
-//            dateTime.setDate(today);
-//            sheet2.addCell(dateTime.copyTo(18, column));
-            //归档
-            sheet2.addCell(new Label(14, column, guidang, wcf));
-        }
         //和TV单(K)
 
         sheet2.addCell(new Label(10, column, "", wcf));
@@ -482,11 +493,11 @@ public class Controller {
     }
 
     /**
-     *
-     * @param s
+     * @param result
      * @return
      */
-    private static String checkRepestString(String s) {
+    private static String checkRepestString(String result) {
+        String s = new String(result);
         int l = 2;
         String congfu = "";
         for (int i = 0; i < s.length() - l; i++) {
