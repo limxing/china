@@ -12,6 +12,7 @@ import android.widget.ListView;
 import com.limxing.library.SweetAlert.SweetAlertDialog;
 import com.limxing.library.utils.FileUtils;
 import com.limxing.library.utils.LogUtils;
+import com.limxing.library.utils.MyThreadPool;
 import com.limxing.library.utils.ToastUtils;
 
 import java.io.File;
@@ -42,6 +43,14 @@ public class MoreActivity extends Activity implements View.OnClickListener {
 
         @Override
         public void handleMessage(Message msg) {
+            if(msg.what==99){
+                adapter.notifyDataSetChanged();
+                if (dialog != null && dialog.isShowing()) {
+
+                    dialog.dismissWithAnimation();
+                }
+                return;
+            }
             MoreActivity activity = mActivity.get();
             if (dialog != null && dialog.isShowing()) {
                 dialog.setContentText(current + "/" + count);
@@ -67,12 +76,12 @@ public class MoreActivity extends Activity implements View.OnClickListener {
                     if (dialog != null && dialog.isShowing()) {
                         dialog.dismissWithAnimation();
                     }
-                    if(error==0){
+                    if (error == 0) {
                         ToastUtils.showLong(activity, "全部转换完成");
-                    }else {
+                    } else {
                         ToastUtils.showLong(activity, "部分转换完成,有" + error + "个没有转换成功");
                     }
-                        fileList.removeAll(finishList);
+                    fileList.removeAll(finishList);
                     adapter.notifyDataSetChanged();
                 }
 
@@ -101,33 +110,38 @@ public class MoreActivity extends Activity implements View.OnClickListener {
         super.onResume();
         fileList.clear();
         finishList.clear();
+        dialog=new SweetAlertDialog(this,SweetAlertDialog.PROGRESS_TYPE);
+        dialog.setTitleText("正在扫描系统文件").show();
+        MyThreadPool.excuteCachedTask(new Runnable() {
+            @Override
+            public void run() {
+                String[] root = Environment.getExternalStorageDirectory().list();
+                for (String s : root) {
+                    if (!s.equals("china")) {
+                        s = Environment.getExternalStorageDirectory() + "/" + s;
+                        File sFile = new File(s);
+                        //     LogUtils.i("ROOT:" + s);
 
-        String[] root = Environment.getExternalStorageDirectory().list();
-        for (String s : root) {
-            if (!s.equals("china")) {
-                s = Environment.getExternalStorageDirectory() + "/" + s;
-                File sFile = new File(s);
-                //     LogUtils.i("ROOT:" + s);
+                        if (sFile.isDirectory()) {
+                            String[] sRoot = sFile.list();
+                            if (sRoot != null) {
+                                for (String ss : sRoot) {
+                                    ss = s + "/" + ss;
+                                    if (new File(ss).isFile() && ss.endsWith(".xls")) {
+                                        fileList.add(new MoreBean(ss, false));
 
-                if (sFile.isDirectory()) {
-
-                    String[] sRoot = sFile.list();
-                    if (sRoot != null) {
-                        for (String ss : sRoot) {
-
-                            ss = s + "/" + ss;
-                            if (new File(ss).isFile() && ss.endsWith(".xls")) {
-                                fileList.add(new MoreBean(ss, false));
-
+                                    }
+                                }
                             }
+                        } else if (s.endsWith(".xls")) {
+                            fileList.add(new MoreBean(s, false));
                         }
                     }
-                } else if (s.endsWith(".xls")) {
-                    fileList.add(new MoreBean(s, false));
                 }
+
+                mHandler.sendEmptyMessage(99);
             }
-        }
-        adapter.notifyDataSetChanged();
+        });
     }
 
     @Override
@@ -164,7 +178,7 @@ public class MoreActivity extends Activity implements View.OnClickListener {
                 LogUtils.i(newFile.toString());
                 if (newFile.exists()) {
                     SweetAlertDialog dialog = new SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE);
-                    dialog.setTitleText("已存在:"+name).setContentText("是否替换?").setConfirmText("替换")
+                    dialog.setTitleText("已存在:" + name).setContentText("是否替换?").setConfirmText("替换")
                             .setCancelText("取消'").setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
                         @Override
                         public void onClick(SweetAlertDialog sweetAlertDialog) {
