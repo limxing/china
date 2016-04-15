@@ -281,6 +281,12 @@ public class Controller {
         if (result.contains("\\")) {
             result = result.replaceAll("\\\\", "");
         }
+        if (result.contains("(")) {
+            result = result.replaceAll("\\(", "");
+        }
+        if (result.contains(")")) {
+            result = result.replaceAll("\\)", "");
+        }
         // Matcher matcher = Pattern.compile("[0-9]").matcher(result);
         // if (matcher.find()) {
         // // System.out.println(matcher.start());
