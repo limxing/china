@@ -43,6 +43,7 @@ public class Controller {
     private static DateCell dc;
     private static WritableCellFormat wcf;
     private static WritableCellFormat dateWcf;
+    private static WritableCellFormat dateFormat;
 
     public static void start(final Activity activity, final String path, final ControllerListener listener) {
         MyThreadPool.excuteCachedTask(new Runnable() {
@@ -77,14 +78,13 @@ public class Controller {
                     // System.out.println(rownum);
                     // SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd
                     // HH:mm:ss");
-                    SimpleDateFormat dateFormat = new SimpleDateFormat("M月d日");
+//                    SimpleDateFormat dateFormat = new SimpleDateFormat("M月d日");
                     long time = System.currentTimeMillis();// 当前时间
 //                    today = dateFormat.format(new Date(time));
                     today = new Date(time);
                     time = time + 86400000;
 //                    tomorrow = dateFormat.format(new Date(time));
                     tomorrow = new Date(time);
-
 
 
                     //获取日期格式
@@ -98,6 +98,10 @@ public class Controller {
                     cell1Sheet2 = sheet2.getCell(0, 0);
                     wcf = new WritableCellFormat(cell1Sheet2.getCellFormat());
                     wcf.setBorder(jxl.format.Border.ALL, jxl.format.BorderLineStyle.THIN);
+
+                    cell1Sheet2 = sheet2.getCell(1, 0);
+                    dateFormat = new WritableCellFormat(cell1Sheet2.getCellFormat());
+                    dateFormat.setBorder(jxl.format.Border.ALL, jxl.format.BorderLineStyle.THIN);
 
 
                     int guiDang = 0;
@@ -227,7 +231,8 @@ public class Controller {
         if (!result.isEmpty() && result.length() > 0) {
             dc = (DateCell) c;
             DateTime dataTime = new DateTime(dc);
-            sheet2.addCell(dataTime.copyTo(1, column));
+//            sheet2.addCell(dataTime.copyTo(1, column));
+            sheet2.addCell(new DateTime(1, column, dc.getDate(), dateFormat));
         } else {
             sheet2.addCell(new Label(1, column, "", wcf));
         }
@@ -239,9 +244,10 @@ public class Controller {
 
         if (!result.isEmpty() && result.length() > 0) {
             dc = (DateCell) c;
-            sheet2.addCell(new DateTime(dc).copyTo(2, column));
+//            sheet2.addCell(new DateTime(dc).copyTo(2, column));
+            sheet2.addCell(new DateTime(2, column, dc.getDate(), dateFormat));
         } else {
-            sheet2.addCell(new Label(2, column, "", wcf));
+            sheet2.addCell(new Label(1, column, "", wcf));
         }
 
 
@@ -282,10 +288,10 @@ public class Controller {
             result = result.replaceAll("\\\\", "");
         }
         if (result.contains("(")) {
-            result = result.replaceAll("\\(", "");
+            result = result.replaceAll("\\(", "（");
         }
         if (result.contains(")")) {
-            result = result.replaceAll("\\)", "");
+            result = result.replaceAll("\\)", "）");
         }
         // Matcher matcher = Pattern.compile("[0-9]").matcher(result);
         // if (matcher.find()) {
@@ -389,6 +395,7 @@ public class Controller {
             result = result.substring(result.indexOf("-") + 1);
         }
         sheet2.addCell(new Label(6, column, result, wcf));
+
         // 溶解
         String rongValue = rongMap.get(result);
         if (rongValue.equals("填空")) {
@@ -396,10 +403,11 @@ public class Controller {
         }
 //		判断溶解是否需要换人
         cell = sheet.getCell(28, i);
-        if (result.length() > 0 && !cell.getContents().isEmpty()) {
+        if (cell.getContents().length() > 0 && !cell.getContents().isEmpty() && guidang.equals("派单")) {
             rongValue = cell.getContents();
         }
         sheet2.addCell(new Label(12, column, rongValue, wcf));
+
         // 放线
         String fangValue = fangMap.get(result);
         if (fangValue.equals("填空") || isEmpty) {
