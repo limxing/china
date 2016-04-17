@@ -12,4 +12,9 @@
         android:orderInCategory="100"
         android:title="批量操作"
         app:showAsAction="never" />
+    <item
+        android:id="@+id/action_country"
+        android:orderInCategory="100"
+        android:title="负责人设置"
+        app:showAsAction="never" />
 </menu>

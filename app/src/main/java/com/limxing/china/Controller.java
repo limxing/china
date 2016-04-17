@@ -28,6 +28,7 @@ import jxl.write.WritableCellFormat;
 import jxl.write.WritableSheet;
 import jxl.write.WritableWorkbook;
 import jxl.write.WriteException;
+import jxl.write.biff.DateRecord;
 import jxl.write.biff.RowsExceededException;
 
 /**
@@ -38,8 +39,8 @@ public class Controller {
     static Map<String, String> rongMap;
     static Map<String, String> fangMap;
     static boolean isEmpty;
-    static Date tomorrow;
-    private static Date today;
+    static String tomorrow;
+    private static String today;
     private static DateCell dc;
     private static WritableCellFormat wcf;
     private static WritableCellFormat dateWcf;
@@ -78,13 +79,13 @@ public class Controller {
                     // System.out.println(rownum);
                     // SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd
                     // HH:mm:ss");
-//                    SimpleDateFormat dateFormat = new SimpleDateFormat("M月d日");
+                    SimpleDateFormat dateFormat1 = new SimpleDateFormat("M月d日");
                     long time = System.currentTimeMillis();// 当前时间
-//                    today = dateFormat.format(new Date(time));
-                    today = new Date(time);
+                    today = dateFormat1.format(new Date(time));
+//                    today = new Date(time);
                     time = time + 86400000;
-//                    tomorrow = dateFormat.format(new Date(time));
-                    tomorrow = new Date(time);
+                    tomorrow = dateFormat1.format(new Date(time));
+//                    tomorrow = new Date(time);
 
 
                     //获取日期格式
@@ -232,7 +233,8 @@ public class Controller {
             dc = (DateCell) c;
             DateTime dataTime = new DateTime(dc);
 //            sheet2.addCell(dataTime.copyTo(1, column));
-            sheet2.addCell(new DateTime(1, column, dc.getDate(), dateFormat));
+//            long l = dc.getDate().getTime() - 28800;
+            sheet2.addCell(new DateTime(1, column, dc.getDate(), dateFormat,DateTime.GMT));
         } else {
             sheet2.addCell(new Label(1, column, "", wcf));
         }
@@ -241,11 +243,11 @@ public class Controller {
         // 期望时间
         c = sheet.getCell(13, i);
         result = c.getContents();
-
         if (!result.isEmpty() && result.length() > 0) {
             dc = (DateCell) c;
 //            sheet2.addCell(new DateTime(dc).copyTo(2, column));
-            sheet2.addCell(new DateTime(2, column, dc.getDate(), dateFormat));
+//            long l = dc.getDate().getTime() - 28800;
+            sheet2.addCell(new DateTime(2, column, dc.getDate(), dateFormat,DateTime.GMT));
         } else {
             sheet2.addCell(new Label(1, column, "", wcf));
         }
@@ -369,14 +371,14 @@ public class Controller {
 
 //统计日期
         if (guidang.equals("派单")) {
-//            sheet2.addCell(new Label(18, column, tomorrow,wcf));
-            sheet2.addCell(new DateTime(18, column, tomorrow, dateWcf));
+            sheet2.addCell(new Label(18, column, tomorrow, wcf));
+//            sheet2.addCell(new DateTime(18, column, tomorrow, dateWcf));
 //            sheet2.addCell(dateTime.copyTo(18, column));
             //归档
             sheet2.addCell(new Label(14, column, "", wcf));
         } else {
-//            sheet2.addCell(new Label(18, column, today,wcf));
-            sheet2.addCell(new DateTime(18, column, today, dateWcf));
+            sheet2.addCell(new Label(18, column, today, wcf));
+//            sheet2.addCell(new DateTime(18, column, today, dateWcf));
 //            dateTime.setDate(today);
 //            sheet2.addCell(dateTime.copyTo(18, column));
             //归档
