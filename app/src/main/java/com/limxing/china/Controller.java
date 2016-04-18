@@ -405,7 +405,7 @@ public class Controller {
         }
 //		判断溶解是否需要换人
         cell = sheet.getCell(28, i);
-        if (cell.getContents().length() > 0 && !cell.getContents().isEmpty() && guidang.equals("派单")) {
+        if (cell.getContents().length() > 0 && !cell.getContents().isEmpty() && ispaiOrGui) {
             rongValue = cell.getContents();
         }
         sheet2.addCell(new Label(12, column, rongValue, wcf));
