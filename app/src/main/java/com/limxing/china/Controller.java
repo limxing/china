@@ -117,45 +117,45 @@ public class Controller {
                         switch (result) {
                             case "执行中":
                                 paiDan++;
-                                zhixingzhong(sheet, book2, i, 2, paiDan, true, "派单");
+                                zhixingzhong(sheet, book2, i, 2, paiDan, true, "派单", false);
                                 break;
                             case "已开通":
                                 guiDang++;
                                 //归档
-                                zhixingzhong(sheet, book2, i, 0, guiDang, true, "归档");
+                                zhixingzhong(sheet, book2, i, 0, guiDang, true, "归档", true);
                                 break;
                             case "已归档":
                                 cell = sheet.getCell(3, i);
                                 result = cell.getContents();
                                 if (result.equals("OTTTV 拆机流程")) {
                                     guiDang++;
-                                    //校园里并OTTTV
-                                    zhixingzhong(sheet, book2, i, 0, guiDang, true, "归档");
+
+                                    zhixingzhong(sheet, book2, i, 0, guiDang, true, "归档", true);
                                 } else if (result.equals("执行中")) {
                                     paiDan++;
-                                    zhixingzhong(sheet, book2, i, 2, paiDan, true, "派单");
+                                    zhixingzhong(sheet, book2, i, 2, paiDan, true, "派单", false);
                                 } else {
                                     xiaoYuan++;
-                                    zhixingzhong(sheet, book2, i, 1, xiaoYuan, false, "");
+                                    zhixingzhong(sheet, book2, i, 1, xiaoYuan, false, "", false);
                                 }
                                 break;
                             case "已撤单":
                                 cheDan++;
-                                zhixingzhong(sheet, book2, i, 3, cheDan, false, "");
+                                zhixingzhong(sheet, book2, i, 3, cheDan, false, "", false);
                                 break;
                             case "已拆除":
                                 guiDang++;
                                 //拆机
-                                zhixingzhong(sheet, book2, i, 0, guiDang, true, "拆机");
+                                zhixingzhong(sheet, book2, i, 0, guiDang, true, "拆机", true);
                                 break;
                             case "开通失败":
                                 cheDan++;
-                                zhixingzhong(sheet, book2, i, 3, cheDan, false, "");
+                                zhixingzhong(sheet, book2, i, 3, cheDan, false, "", false);
                                 break;
 
                             case "开通失败,驳回CRM":
                                 cheDan++;
-                                zhixingzhong(sheet, book2, i, 3, cheDan, false, "");
+                                zhixingzhong(sheet, book2, i, 3, cheDan, false, "", false);
                                 break;
                             default:
                                 break;
@@ -217,7 +217,7 @@ public class Controller {
      */
 
     private static void zhixingzhong(Sheet sheet, WritableWorkbook book, int i, int sheetLocation, final int column,
-                                     boolean ispaiOrGui, String guidang) throws WriteException {
+                                     boolean ispaiOrGui, String guidang, boolean isGuiDang) throws WriteException {
         // TODO Auto-generated method stub
         WritableSheet sheet2 = book.getSheet(sheetLocation);
 
@@ -226,11 +226,26 @@ public class Controller {
         String result = cell.getContents();
         sheet2.addCell(new Label(0, column, result, wcf));
         sheet2.addCell(new Label(17, column, result, wcf));
-        // 派单时间
-        Cell c = sheet.getCell(14, i);
-        result = c.getContents();
+
+        // 期望时间
+        cell = sheet.getCell(13, i);
+        result = cell.getContents();
+
         if (!result.isEmpty() && result.length() > 0) {
-            dc = (DateCell) c;
+            dc = (DateCell) cell;
+//            sheet2.addCell(new DateTime(dc).copyTo(2, column));
+//            long l = dc.getDate().getTime() - 28800;
+            sheet2.addCell(new DateTime(2, column, dc.getDate(), dateFormat, DateTime.GMT));
+//            sheet2.addCell(new DateTime(2, column, dc.getDate(), dateFormat));
+        } else {
+            sheet2.addCell(new Label(2, column, "", wcf));
+        }
+
+        // 派单时间
+        cell = sheet.getCell(14, i);
+        result = cell.getContents();
+        if (!result.isEmpty() && result.length() > 0) {
+            dc = (DateCell) cell;
             DateTime dataTime = new DateTime(dc);
 //            sheet2.addCell(dataTime.copyTo(1, column));
 //            long l = dc.getDate().getTime() - 28800;
@@ -240,17 +255,7 @@ public class Controller {
         }
 //        sheet2.addCell(new Label(1, column, timeFormat(result)));
 
-        // 期望时间
-        c = sheet.getCell(13, i);
-        result = c.getContents();
-        if (!result.isEmpty() && result.length() > 0) {
-            dc = (DateCell) c;
-//            sheet2.addCell(new DateTime(dc).copyTo(2, column));
-//            long l = dc.getDate().getTime() - 28800;
-            sheet2.addCell(new DateTime(2, column, dc.getDate(), dateFormat,DateTime.GMT));
-        } else {
-            sheet2.addCell(new Label(1, column, "", wcf));
-        }
+
 
 
         // 账号
@@ -405,7 +410,7 @@ public class Controller {
         }
 //		判断溶解是否需要换人
         cell = sheet.getCell(28, i);
-        if (cell.getContents().length() > 0 && !cell.getContents().isEmpty() && guidang.equals("归档")) {
+        if (cell.getContents().length() > 0 && !cell.getContents().isEmpty() && isGuiDang) {
             rongValue = cell.getContents();
         }
         sheet2.addCell(new Label(12, column, rongValue, wcf));

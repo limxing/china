@@ -204,6 +204,9 @@ public class MoreActivity extends Activity implements View.OnClickListener {
                 mHandler.sendEmptyMessage(1);
 
             }
+        } else {
+
+            mHandler.sendEmptyMessage(0);
         }
 
     }
