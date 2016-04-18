@@ -21,6 +21,7 @@ import com.limxing.library.utils.FileUtils;
 import com.limxing.library.utils.LogUtils;
 import com.limxing.library.utils.MyThreadPool;
 import com.limxing.library.utils.PhoneInfo;
+import com.limxing.library.utils.StringUtils;
 import com.limxing.library.utils.ToastUtils;
 
 import org.json.JSONException;
@@ -44,6 +45,7 @@ import java.util.TimerTask;
  * Created by limxing on 16/4/10.
  */
 public class WelcomeActivity extends Activity {
+    private static final int INSTALL = 88;
     private boolean isNew = false;
     private SweetAlertDialog dialog;
 
@@ -63,7 +65,7 @@ public class WelcomeActivity extends Activity {
                 install.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 install.setAction(android.content.Intent.ACTION_VIEW);
                 install.setDataAndType(Uri.fromFile(new File(FileUtils.getCacheDir(), "china.apk")), "application/vnd.android.package-archive");
-                startActivity(install);
+                startActivityForResult(install, INSTALL);
                 return;
             }
             if (msg.what == 2) {
@@ -86,10 +88,10 @@ public class WelcomeActivity extends Activity {
                     sweetAlertDialog.dismissWithAnimation();
                     toDownload();
                 }
-            }).setCancelText("取消").setOnCancelListener(new DialogInterface.OnCancelListener() {
+            }).setCancelText("取消").setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
                 @Override
-                public void onCancel(DialogInterface dialogInterface) {
-                    dialog.dismiss();
+                public void onClick(SweetAlertDialog sweetAlertDialog) {
+                    sweetAlertDialog.dismiss();
                     Intent intent = new Intent(WelcomeActivity.this, MainActivity.class);
                     startActivity(intent);
                     finish();
@@ -118,6 +120,10 @@ public class WelcomeActivity extends Activity {
         dialog.show();
         String url = "http://www.limxing.com/china.apk";
         LogUtils.i(FileUtils.getCacheDir() + "china.apk");
+        File file = new File(FileUtils.getCacheDir() + "china.apk");
+        if (file.exists()) {
+            file.delete();
+        }
         new HttpUtils().download(url, FileUtils.getCacheDir() + "china.apk", new RequestCallBack<File>() {
             @Override
             public void onSuccess(ResponseInfo<File> responseInfo) {
@@ -127,6 +133,12 @@ public class WelcomeActivity extends Activity {
             @Override
             public void onFailure(HttpException e, String s) {
                 mHandler.sendEmptyMessage(2);
+            }
+
+            @Override
+            public void onLoading(long total, long current, boolean isUploading) {
+
+                dialog.setContentText(StringUtils.formatFileSize(current) + "/" + StringUtils.formatFileSize(total));
             }
         });
     }
@@ -167,6 +179,11 @@ public class WelcomeActivity extends Activity {
 
     }
 
+    /**
+     * 检查更新
+     *
+     * @throws Exception
+     */
     private void checkUpdate() throws Exception {
         PackageManager manager = this.getPackageManager();
         PackageInfo info = manager.getPackageInfo(this.getPackageName(), 0);
@@ -193,17 +210,17 @@ public class WelcomeActivity extends Activity {
 
         }
         connection.disconnect();
-
-
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        LogUtils.i(requestCode + "==" + resultCode);
-        ToastUtils.showLong(WelcomeActivity.this, "安装取消");
-        Intent intent = new Intent(WelcomeActivity.this, MainActivity.class);
-        startActivity(intent);
-        finish();
+        if (requestCode == INSTALL) {
+            LogUtils.i(requestCode + "==" + resultCode);
+            ToastUtils.showLong(WelcomeActivity.this, "安装取消");
+            Intent intent = new Intent(WelcomeActivity.this, MainActivity.class);
+            startActivity(intent);
+            finish();
+        }
     }
 
 

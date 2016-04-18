@@ -151,6 +151,10 @@ public class MainActivity extends AppCompatActivity {
             case FILE_SELECT_CODE:
                 if (resultCode == RESULT_OK) {
                     // Get the Uri of the selected file
+                    if (data == null) {
+                        ToastUtils.showLong(this, "选择的文件路径错误");
+                        return;
+                    }
                     Uri uri = data.getData();
                     final String path = FileUtils.getPathFromSD(this, uri);
                     if (!path.endsWith(".xls")) {

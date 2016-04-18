@@ -29,18 +29,7 @@ public class CountryActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_country);
-        country_container=(RelativeLayout)findViewById(R.id.country_container);
-        country_rg=(RadioGroup)  findViewById(R.id.country_rg);
-        country_rg.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
-                if (checkedId==0){
 
-                }else{
-
-                }
-            }
-        });
 
     }
 
