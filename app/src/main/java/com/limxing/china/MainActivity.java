@@ -14,6 +14,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ListView;
 
+import com.bigkoo.alertview.AlertView;
+import com.bigkoo.alertview.OnItemClickListener;
+import com.limxing.china.two.Controller2;
+import com.limxing.library.BottomDialog.AlertDialog;
 import com.limxing.library.SVProgressHUD.SVProgressHUD;
 import com.limxing.library.SweetAlert.SweetAlertDialog;
 import com.limxing.library.utils.FileUtils;
@@ -193,7 +197,7 @@ public class MainActivity extends AppCompatActivity {
                             mHandler.sendEmptyMessage(1);
 
                         }
-                        ToastUtils.showLong(this, "选择的文件格式错误");
+//                        ToastUtils.showLong(this, "选择的文件格式错误");
                         return;
                     }
                 }
@@ -202,7 +206,65 @@ public class MainActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
     }
 
-    private void transfor(String name, String path) {
+    /**
+     *
+     * @param name
+     * @param path
+     */
+    private void transfor(final String name, final String path) {
+
+        new AlertView("选择转换方式", null, "取消", null,
+                new String[]{"派单转换", "工作量统计转换"},
+                this, AlertView.Style.ActionSheet, new OnItemClickListener(){
+            public void onItemClick(Object o,int position){
+switch (position){
+    case 0:
+        transOne(name,path);
+        break;
+    case 1:
+        transTwo(name,path);
+        break;
+}
+            }
+        }).show();
+
+
+
+
+    }
+
+    /**
+     * 工作量统计
+     * @param name
+     * @param path
+     */
+    private void transTwo(String name, String path) {
+        svp.showWithProgress("正在转换", SVProgressHUD.SVProgressHUDMaskType.Black);
+        final String finalName = name;
+        Controller2.start(MainActivity.this, path, new Controller.ControllerListener() {
+            @Override
+            public void finish() {
+
+                if (!list.contains(finalName)) {
+                    list.add(finalName);
+                }
+
+                mHandler.sendEmptyMessage(0);
+            }
+
+            @Override
+            public void error() {
+                mHandler.sendEmptyMessage(2);
+            }
+        });
+    }
+
+    /**
+     * 执行第一期的转换
+     * @param name
+     * @param path
+     */
+    private  void transOne(String name, String path){
         svp.showWithProgress("正在转换", SVProgressHUD.SVProgressHUDMaskType.Black);
         final String finalName = name;
         Controller.start(MainActivity.this, path, new Controller.ControllerListener() {
@@ -224,6 +286,5 @@ public class MainActivity extends AppCompatActivity {
                 mHandler.sendEmptyMessage(2);
             }
         });
-
     }
 }

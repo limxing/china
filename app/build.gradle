@@ -27,4 +27,5 @@ dependencies {
     compile files('libs/jxl.jar')
     compile project(':library')
     compile files('libs/xUtils-2.6.14.jar')
+    compile 'com.bigkoo:alertview:1.0.2'
 }
