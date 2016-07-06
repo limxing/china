@@ -157,43 +157,44 @@ public class MainActivity extends AppCompatActivity {
                     }
                     Uri uri = data.getData();
                     final String path = FileUtils.getPathFromSD(this, uri);
-                    if (!path.endsWith(".xls")) {
-                        ToastUtils.showLong(this, "选择的文件格式错误");
-                        return;
-                    }
-                    final File file = new File(path);
-                    String name = file.getName();
-                    name = name.substring(0, name.lastIndexOf(".")) + "_changed.xls";
-                    if (file.exists()) {
-                        final File newFile = new File(FileUtils.getExternalStoragePath(), name);
-                        LogUtils.i(newFile.toString());
-                        if (newFile.exists()) {
-                            SweetAlertDialog dialog = new SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE);
-                            final String finalName = name;
-                            dialog.setTitleText("已存在此转换文件").setContentText("是否替换?").setConfirmText("替换")
-                                    .setCancelText("取消'").setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                                @Override
-                                public void onClick(SweetAlertDialog sweetAlertDialog) {
-                                    sweetAlertDialog.dismissWithAnimation();
-                                    newFile.delete();
-                                    transfor(finalName, path);
-                                }
-                            }).setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                                @Override
-                                public void onClick(SweetAlertDialog sweetAlertDialog) {
-                                    sweetAlertDialog.dismissWithAnimation();
-                                }
-                            });
-                            dialog.show();
-                        } else {
-                            transfor(name, path);
-                        }
+                    if (path.endsWith(".xls")) {
 
-                    } else {
+                        final File file = new File(path);
+                        String name = file.getName();
+                        name = name.substring(0, name.lastIndexOf(".")) + "_changed.xls";
+                        if (file.exists()) {
+                            final File newFile = new File(FileUtils.getExternalStoragePath(), name);
+                            LogUtils.i(newFile.toString());
+                            if (newFile.exists()) {
+                                SweetAlertDialog dialog = new SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE);
+                                final String finalName = name;
+                                dialog.setTitleText("已存在此转换文件").setContentText("是否替换?").setConfirmText("替换")
+                                        .setCancelText("取消'").setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                                    @Override
+                                    public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                        sweetAlertDialog.dismissWithAnimation();
+                                        newFile.delete();
+                                        transfor(finalName, path);
+                                    }
+                                }).setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                                    @Override
+                                    public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                        sweetAlertDialog.dismissWithAnimation();
+                                    }
+                                });
+                                dialog.show();
+                            } else {
+                                transfor(name, path);
+                            }
+
+                        } else {
 //                        Snackbar.make(view, "文件不存在", Snackbar.LENGTH_SHORT)
 //                                .setAction("Action", null).show();
-                        mHandler.sendEmptyMessage(1);
+                            mHandler.sendEmptyMessage(1);
 
+                        }
+                        ToastUtils.showLong(this, "选择的文件格式错误");
+                        return;
                     }
                 }
                 break;

@@ -81,7 +81,7 @@ public class WelcomeActivity extends Activity {
                 return;
             }
             dialog = new SweetAlertDialog(WelcomeActivity.this, SweetAlertDialog.WARNING_TYPE);
-            dialog.setTitleText("发现新版本").setContentText("是否进行下载更新");
+            dialog.setTitleText("发现新版本").setContentText(message);
             dialog.setConfirmText("下载").setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
                 @Override
                 public void onClick(SweetAlertDialog sweetAlertDialog) {
@@ -100,6 +100,7 @@ public class WelcomeActivity extends Activity {
             dialog.show();
         }
     };
+    private String message = "";
 
 //    private class MyHandler extends Handler {
 //        private final WeakReference<WelcomeActivity> mActivity;
@@ -206,6 +207,7 @@ public class WelcomeActivity extends Activity {
             isNew = false;
         } else {
             isNew = true;
+            message = jsonObj.getString("message");
             mHandler.sendEmptyMessage(0);
 
         }
