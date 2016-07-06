@@ -67,7 +67,7 @@ public class Controller2 {
                     for (int i=1;i<rownum;i++){
                         Cell s= sheet.getCell(14,i);//列 行
                         Cell cell1=sheet.getCell(0,i);
-                       
+
                         break;
                     }
 
